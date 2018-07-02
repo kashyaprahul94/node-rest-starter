@@ -2,13 +2,14 @@ import { AxiosRequestConfig, AxiosResponse } from "axios";
 
 import { IHeader, IHeaderValue } from "../interfaces";
 
-export class Response {
+export class Response<T> {
 
     private readonly _request: any;
     private readonly _conifg: AxiosRequestConfig;
     private readonly _status: number;
     private readonly _statusText: string;
     private readonly _headers: IHeader;
+    private readonly _data: T;
 
     public constructor ( response: AxiosResponse ) {
 		this._request = response.request;
@@ -16,11 +17,12 @@ export class Response {
 		this._status = response.status;
 		this._statusText = response.statusText;
 		this._headers = response.headers;
+		this._data = response.data;
     }
 
-	public static Create ( response: AxiosResponse ) {
+	public static Create = ( response: AxiosResponse ) => {
 		return new Response( response );
-	}
+	};
 
 
     public request (): any {
@@ -42,6 +44,10 @@ export class Response {
     }
 	public header ( key: string ): IHeaderValue {
 		return this._headers[ key ];
+	}
+
+	public data (): T {
+		return this._data;
 	}
 
 }

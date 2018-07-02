@@ -3,7 +3,7 @@ import * as Promise from "bluebird";
 
 import { Config } from "@app-config";
 
-import { Server } from "@app/common/networking";
+import { Server } from "@app/common/api/server";
 
 export class App {
 
@@ -12,6 +12,7 @@ export class App {
 	private readonly config: Config;
 
 	private readonly server: Server;
+
 
 	private constructor () {
 
@@ -35,14 +36,14 @@ export class App {
 
 
 
-	private startServer ( port?: number, hostname?: string, prefix?: string ): Server {
+	private startServer = ( port?: number, hostname?: string, prefix?: string ): Server => {
 		return this.server
 			.withPort( port || this.config.appPort )
 			.asHostname( hostname || this.config.appHost )
-			.withPrefix( prefix )
+			.withPrefix( prefix || this.config.mountPoint )
 			.boot()
 		;
-	}
+	};
 
 
 	public init (): Promise<void> {
@@ -56,9 +57,9 @@ export class App {
 		;
 	}
 
-	public getServerInstance (): Promise<Server> {
+	public getServerInstance = (): Promise<Server> => {
 		return Promise.resolve( this.server );
-	}
+	};
 
 	public start ( port?: number, hostname?: string, prefix?: string ): Promise<App> {
 		return Promise.all([

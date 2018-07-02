@@ -11,31 +11,31 @@ export class HttpClient {
     }
 
 
-	public get ( request: Request ): Promise<Response> {
+	public get ( request: Request ): Promise<Response<any>> {
     	return this.delegate.get( request.getURL(), request.build() )
 			.then( Response.Create )
 		;
 	}
 
-	public post ( request: Request ): Promise<Response> {
+	public post ( request: Request ): Promise<Response<any>> {
     	return this.delegate.post( request.getURL(), request.getData(), request.build() )
 			.then( Response.Create )
 		;
 	}
 
-	public put ( request: Request ): Promise<Response> {
+	public put ( request: Request ): Promise<Response<any>> {
     	return this.delegate.put( request.getURL(), request.getData(), request.build() )
 			.then( Response.Create )
 		;
 	}
 
-	public patch ( request: Request ): Promise<Response> {
+	public patch ( request: Request ): Promise<Response<any>> {
     	return this.delegate.patch( request.getURL(), request.getData(), request.build() )
 			.then( Response.Create )
 		;
 	}
 
-	public delete ( request: Request ): Promise<Response> {
+	public delete ( request: Request ): Promise<Response<any>> {
 		return this.delegate.delete( request.getURL(), request.build() )
 			.then( Response.Create )
 		;

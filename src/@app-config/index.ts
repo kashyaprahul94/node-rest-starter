@@ -6,11 +6,13 @@ export class Config {
 
 	public appPort: number;
 	public appHost: string;
+	public mountPoint: string;
 
 	private constructor () {
 
 		this.appPort = parseInt( env.PORT ) || 3010;
 		this.appHost = env.HOST || "localhost";
+		this.mountPoint = "/";
 	}
 
 	public static Instance (): Config {
