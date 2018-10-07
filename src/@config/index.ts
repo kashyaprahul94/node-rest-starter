@@ -10,8 +10,9 @@ export class Config {
 
 	private constructor () {
 
-		this.appPort = parseInt( env.PORT ) || 3010;
+		this.appPort = parseInt( ( env.PORT || 3010 ).toString() );
 		this.appHost = env.HOST || "localhost";
+		this.appHost = ( env.SHARED_HOST ) ? "0.0.0.0" : this.appHost;
 		this.mountPoint = "/";
 	}
 

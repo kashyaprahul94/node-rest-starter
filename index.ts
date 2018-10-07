@@ -1,15 +1,12 @@
-import { Instance } from "@app";
+import { ApplicationRunner } from "@app/common/core";
 
-Instance.Boot({
+import { SampleApplicaiton } from "@app";
 
-})
+ApplicationRunner.Run( SampleApplicaiton )
 	.catch( () => {
 
 	})
 	.then( () => {
-
-	})
-	.finally( () => {
 
 	})
 ;

@@ -5,21 +5,21 @@ export class BaseAPIRoute {
 	protected router: APIRouter;
 	protected middlewares: APIMiddleware[];
 
-	public constructor ( router: APIRouter, middlewares: APIMiddleware[] = [] ) {
+	protected constructor ( router: APIRouter, middlewares: APIMiddleware[] = [] ) {
 		this.router = router;
 		this.middlewares = middlewares;
 	}
 
-	public attach ( middleware: APIMiddleware ): BaseAPIRoute {
+	protected attach ( middleware: APIMiddleware ): BaseAPIRoute {
 		this.middlewares.push( middleware );
 		return this;
 	}
 
-	public resource ( route: RouteType ): APIEndpoint {
+	protected resource ( route: RouteType ): APIEndpoint {
 		return this.router.route( route );
 	}
 
-	public configure (): void {
+	protected configure (): void {
 		if ( this.middlewares.length ) {
 			this.router.use( this.middlewares.map( middleware => middleware.middleware ) );
 		}

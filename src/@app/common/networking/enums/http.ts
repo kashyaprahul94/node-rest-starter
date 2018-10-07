@@ -1,4 +1,4 @@
-export const enum Method {
+export enum Method {
 
 	HEAD = "head",
 	GET = "get",
@@ -8,7 +8,7 @@ export const enum Method {
 	DELETE = "delete",
 }
 
-export const enum StatusCode {
+export enum StatusCode {
 
 	Okay = 200,
 	Created = 201,
@@ -28,13 +28,13 @@ export const enum StatusCode {
 }
 
 
-export const enum RequestHeader {
+export enum RequestHeader {
 	Accept = "Accept",
 	Authorization = "Authorization",
 	ContentType = "Content-Type",
 }
 
-export const enum HeaderValue {
+export enum HeaderValue {
 	ContentJSON = "application/json",
 	ContentFormEncoded = "application/x-www-form-urlencoded",
 }

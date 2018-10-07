@@ -10,6 +10,7 @@ export class UserRoute extends BaseAPIRoute implements APIRoute {
 	private delegate: UserService;
 
 	public constructor ( router: APIRouter ) {
+
 		super( router );
 		this.path = "/";
 
@@ -21,17 +22,16 @@ export class UserRoute extends BaseAPIRoute implements APIRoute {
 
 		super.configure();
 
-		super.resource( "/" )
+		this.resource( "/" )
 			.get( this.getHealth )
 		;
 
-		super.resource( "/:id" )
+		this.resource( "/:id" )
 			.get( this.getHealth )
 		;
 
 		return this.router;
 	}
-
 
 	private getHealth = ( req: APIRequest<UserRequest>, res: APIResponse ): void => {
 

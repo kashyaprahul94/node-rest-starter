@@ -4,12 +4,15 @@ import * as CORS from "cors";
 import * as Helmet from "helmet";
 import * as Compression from "compression";
 
+
+import { LoggerFactory, ILogger } from "@app/common/logger";
+
 import { APIRoute } from "./interfaces";
 
 export class Server {
 
 	private static DefaultPort: number = 3099;
-	private static DefaultHost: string = "0.0.0.0";
+	private static DefaultHost: string = "localhost";
 	private static DefaultMount: string = "/";
 
     private port: number;
@@ -21,6 +24,8 @@ export class Server {
 
     private routes: APIRoute[];
 
+    private logger: ILogger;
+
     constructor ( port?: number, hostname?: string, prefix?: string ) {
 
 		this.port = port || Server.DefaultPort;
@@ -31,6 +36,13 @@ export class Server {
         this.router = Express.Router();
 
         this.routes = [];
+
+		this.logger = LoggerFactory.Instance({
+			options: {
+				shouldLogTime: true,
+				decorator: "HTTP Server",
+			}
+		});
 
         this.init();
     }
@@ -59,7 +71,7 @@ export class Server {
 
 
 
-	public attach = ( middleware: Express.Handler ): Server => {
+	public attach = ( middleware: Express.Handler | Express.ErrorRequestHandler ): Server => {
 		this.instance.use( middleware );
     	return this;
 	};
@@ -70,12 +82,25 @@ export class Server {
 
 
 	private attachRoute = ( route: APIRoute ): Server => {
-    	this.router.use( route.path, route.middleware() );
+		if ( route.middleware ) {
+			this.router.use( route.path, route.middleware() );
+		}
     	return this;
 	};
 	private attachRoutes (): Server {
     	this.routes.forEach( this.attachRoute );
     	return this;
+	}
+	private attachErrorHandlers (): Server {
+		return this;
+	}
+
+	private mountRoutes (): Server {
+		this.instance.use( this.prefix, this.router );
+		return this;
+	}
+	private mountMiddlewares (): Server {
+		return this.attachErrorHandlers();
 	}
 
 
@@ -94,11 +119,10 @@ export class Server {
 	}
 
 	private onServerStarted = (): void => {
-		console.info( "Server is listening at http://%s:%d", this.hostname, this.port );
+		this.logger.info( "Server is listening at http://%s:%d", this.hostname, this.port );
 	};
 
 	private ignite (): Server {
-		this.instance.use( this.prefix, this.router );
 		this.instance.listen( this.port, this.hostname, this.onServerStarted );
 		return this;
 	}
@@ -106,6 +130,8 @@ export class Server {
     public boot = (): Server => {
         return this
 			.attachRoutes()
+			.mountRoutes()
+			.mountMiddlewares()
 			.ignite()
 		;
     }

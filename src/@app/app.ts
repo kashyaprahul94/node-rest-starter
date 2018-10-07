@@ -1,6 +1,8 @@
 import { App as Application } from "./instance";
 
-export namespace App {
-	export type Type = Application;
-	export const Instance: Application = Application.Instance();
+export type AppType = Application;
+export const AppInstance: Application = Application.Instance();
+
+export interface IApp {
+	Boot(): Promise<AppType>
 }

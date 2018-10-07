@@ -1,24 +1,33 @@
 import * as Process from "process";
-import * as Promise from "bluebird";
 
-import { Config } from "@app-config";
+import { Config } from "@config";
 
 import { Server } from "@app/common/api/server";
+import { LoggerFactory, ILogger } from "@app/common/logger";
+
 
 export class App {
 
-	private static _Instance: App = null;
+	private static _Instance: App | null = null;
 
 	private readonly config: Config;
 
 	private readonly server: Server;
 
+	private readonly logger: ILogger;
 
 	private constructor () {
 
 		this.config = Config.Instance();
 
 		this.server = new Server();
+
+		this.logger = LoggerFactory.Instance({
+			options: {
+				shouldLogTime: true,
+				decorator: "ERROR",
+			}
+		});
 	}
 
 	public static Instance (): App {
@@ -50,7 +59,7 @@ export class App {
 		return Promise.all( [
 
 		])
-			.spread( () => {
+			.then( () => {
 
 				Process.on( "uncaughtException", this.onUncaughtError );
 			})
@@ -73,6 +82,6 @@ export class App {
 
 
 	private onUncaughtError = ( error: Error ): void => {
-		console.info( "Uncaught Error : ", error );
+		this.logger.error( "Uncaught Error : ", error );
 	};
 }
